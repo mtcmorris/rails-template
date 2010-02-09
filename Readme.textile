@@ -1,0 +1,9 @@
+h1. My rails template
+
+To call 
+bc. rails app_name -m http://github.com/mtcmorris/rails-template/raw/master/base.rb
+
+h2. Todo
+* Add blueprint
+* Add authlogic
+* Add nice default layout
