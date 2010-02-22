@@ -1,4 +1,5 @@
 load_template "http://github.com/mtcmorris/rails-template/raw/master/base.rb"
+project_dir = root.split('/').last
 gem 'authlogic'
 rake 'gems:install', :sudo => true
  
@@ -17,29 +18,29 @@ route "map.login '/login', :controller => 'user_sessions', :action => 'destroy'"
 # setup UsesSessionsController
 file "app/controllers/user_sessions_controller.rb", <<-FILE
 class UserSessionsController < ApplicationController
-skip_before_filter :require_user # Override application wide filter
-before_filter :require_no_user, :only => [:new, :create]
-before_filter :require_user, :only => :destroy
+  skip_before_filter :require_user # Override application wide filter
+  before_filter :require_no_user, :only => [:new, :create]
+  before_filter :require_user, :only => :destroy
  
-def new
-@user_session = UserSession.new
-end
+  def new
+    @user_session = UserSession.new
+  end
  
-def create
-@user_session = UserSession.new(params[:user_session])
-if @user_session.save
-flash[:notice] = "Login successful!"
-redirect_back_or_default account_url
-else
-render :action => :new
-end
-end
+  def create
+    @user_session = UserSession.new(params[:user_session])
+    if @user_session.save
+      flash[:notice] = "Login successful!"
+      redirect_back_or_default account_url
+    else
+      render :action => :new
+    end
+  end
  
-def destroy
-current_user_session.destroy
-flash[:notice] = "Logout successful!"
-redirect_back_or_default new_user_session_url
-end
+  def destroy
+    current_user_session.destroy
+    flash[:notice] = "Logout successful!"
+    redirect_back_or_default new_user_session_url
+  end
 end
 FILE
  
@@ -55,8 +56,6 @@ generate(:scaffold, "user",
   "last_login_ip:string",
   "current_login_ip:string"
 )
- 
-rake "db:migrate"
  
 # make user act as authentic
 file "app/models/user.rb", <<-FILE
@@ -285,7 +284,6 @@ file 'app/views/layouts/application.html.erb',
     <h1>Authlogic Example App</h1>
     <%= pluralize User.logged_in.count, "user" %> currently logged in<br /> <!-- This based on last_request_at, if they were active < 10 minutes they are logged in -->
     <br />
-    <br />
  
  
     <% if !current_user %>
@@ -301,10 +299,4 @@ file 'app/views/layouts/application.html.erb',
 </html>
 }
 
-
-
-
-
- 
-run "rm public/index.html"
 run "rm app/views/layouts/users.html.erb"

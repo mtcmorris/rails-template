@@ -25,6 +25,7 @@ tmp/**/*
 END
 
 # download Blueprint
+run 'rm public/stylesheets/*'
 inside ('public/stylesheets') do
   run "mkdir blueprint; touch base.css"
   run 'curl -L  http://github.com/joshuaclayton/blueprint-css/raw/master/blueprint/ie.css > blueprint/ie.css'
